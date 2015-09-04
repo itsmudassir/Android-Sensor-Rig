@@ -29,6 +29,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
+import android.widget.Toast;
 
 public class GestureRecorder implements SensorEventListener {
 //registers listenrs for the interface of GestureRecorder Service
@@ -38,7 +40,7 @@ public class GestureRecorder implements SensorEventListener {
 		MOTION_DETECTION, PUSH_TO_GESTURE
 	};
 
-	final int MIN_GESTURE_SIZE = 8;
+	final int MIN_GESTURE_SIZE = 50;
 	float THRESHOLD = 2;
 	SensorManager sensorManager;
 	boolean isRecording;
@@ -52,6 +54,8 @@ public class GestureRecorder implements SensorEventListener {
 
 	public GestureRecorder(Context context) {
 		this.context = context;
+		gestureValues = new ArrayList<float[]>();
+
 	}
 
 	private float calcVectorNorm(float[] values) {
@@ -84,60 +88,29 @@ public class GestureRecorder implements SensorEventListener {
 		// do nothing
 	}
 
-	public void onPushToGesture(boolean pushed) {
+	public void onPushToGesture() {
 
-		if (recordMode == RecordMode.PUSH_TO_GESTURE) {
-			isRecording = pushed;
-			if (isRecording) {
-				gestureValues = new ArrayList<float[]>();
-			} else {
+		
+		
+			
 				if (gestureValues.size() > MIN_GESTURE_SIZE) {
-					listener.onGestureRecorded(value);
+					listener.onGestureRecorded(gestureValues);
+					stop();
 				}
-				gestureValues = null;
-			}
-		}
+				 
+			
+		
 	}
 
 	@Override
 	public void onSensorChanged(SensorEvent sensorEvent) {
 
-		 value = sensorEvent.values[SensorManager.DATA_X] ;
-		 listener.onGestureRecorded(value);
-/*
-		switch (recordMode) {
-		case MOTION_DETECTION:
-			if (isRecording) {
-				gestureValues.add(value);
-				if (calcVectorNorm(value) < THRESHOLD) {
-					stepsSinceNoMovement++;
-				} else {
-					stepsSinceNoMovement = 0;
-				}
-			} else if (calcVectorNorm(value) >= THRESHOLD) {
-				isRecording = true;
-				stepsSinceNoMovement = 0;
-				gestureValues = new ArrayList<float[]>();
-				gestureValues.add(value);
-			}
-			if (stepsSinceNoMovement == 10) {
-
-				System.out.println("Length is: " + String.valueOf(gestureValues.size() - 10));
-				if (gestureValues.size() - 10 > MIN_GESTURE_SIZE) {
-					listener.onGestureRecorded(gestureValues.subList(0, gestureValues.size() - 10));
-				}
-				gestureValues = null;
-				stepsSinceNoMovement = 0;
-				isRecording = false;
-			}
-			break;
-		case PUSH_TO_GESTURE:
-			if (isRecording) {
-				gestureValues.add(value);
-			}
-			break;
-		}   */
-
+		float[] value = { sensorEvent.values[SensorManager.DATA_X], sensorEvent.values[SensorManager.DATA_Y], sensorEvent.values[SensorManager.DATA_Z] };
+		Log.d("ONSEMSOR", "CHANGED"); 
+        gestureValues.add(value);
+		
+        onPushToGesture();
+		
 	}
 
 	public void registerListener(GestureRecorderListener listener) {

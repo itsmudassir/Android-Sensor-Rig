@@ -33,16 +33,8 @@
 		</service>
         
         
-         <service
-            android:name="com.example.rig.ClientAidl"
-            android:process=":client_aidl_service"
-            android:exported="true"
-            >
-            <intent-filter >
-                <action android:name="com.example.rig.ClientAidl"></action>
-            </intent-filter>
-        </service>
-        
+         
     </application>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
 </manifest>
