@@ -2,6 +2,8 @@ package com.example.rig;
 
  import java.util.ArrayList;
 
+import com.example.rig.GestureRecorder.RecordMode;
+
 
 
 import android.app.Service;
@@ -24,6 +26,15 @@ import android.widget.Toast;
 public class SignalProvider extends Service implements  GestureRecorderListener  {
 	GestureRecorder recorder;
  GestureClassifier classifier;
+ ArrayList<float[]> value;
+ 
+boolean commit=true, test=false;
+ 
+ 
+	
+	
+	
+ 
 	public float accel;
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -44,6 +55,7 @@ public class SignalProvider extends Service implements  GestureRecorderListener 
 	public void onCreate() {
 		recorder = new GestureRecorder(this);
 		classifier = new GestureClassifier(this);
+		ArrayList<float[]> value= new ArrayList<float[]>();
 
  		super.onCreate();
 	}
@@ -62,6 +74,30 @@ public class SignalProvider extends Service implements  GestureRecorderListener 
  				       Log.d("recorder.start", "hit");
  recorder.start();
 				}
+
+		@Override
+		public void setCommit(boolean a) throws RemoteException {
+			// TODO Auto-generated method stub
+			
+			
+			
+				commit=a;
+	
+		
+			
+			
+		}
+
+		@Override
+		public void setTest(boolean a) throws RemoteException {
+			// TODO Auto-generated method stub
+			test=a;
+			double results=classifier.Classifysignal(new Gesture(value,"TEST"));
+			Toast.makeText( getApplicationContext(), "DTW DIST="+Double.toString(results), Toast.LENGTH_SHORT).show();
+			
+		}
+
+		
 		
 		
 		
@@ -85,18 +121,28 @@ public class SignalProvider extends Service implements  GestureRecorderListener 
 	   
  	   
 		@Override
-		public void onGestureRecorded(ArrayList<float[]> value) {
-			classifier.commitData(new Gesture(value,"Walk"));
+		public void onGestureRecorded(ArrayList<float[]> value1) {
+			value=value1;
+			Log.d("ongesture", "array iss here");
+if(commit){
+
+			classifier.commitData(new Gesture(value,"walk"));
 			float a=value.get(3)[2];
 			// TODO Auto-generated method stub
 			Toast.makeText(getApplicationContext(), "intent"+Float.toString(a), Toast.LENGTH_SHORT).show();
 for(int i=0;i<48;i++){
 				   Log.d("OnGesture", " Val: "+value.get(i)[0]+" "+value.get(i)[1]+" "+value.get(i)[2]);
  			}
+}
+//if(test){
+			//classifier.loadTrainingSet("walk");
+			
+		
+
+}
+		
+		
+	
+		
 		}
 
-	
-	
-}
-
-	

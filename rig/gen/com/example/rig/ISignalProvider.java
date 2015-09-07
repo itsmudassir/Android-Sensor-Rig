@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: D:\\1Bs.Cs\\my fyp java work\\Prototype interface\\Rig\\rig\\src\\com\\example\\rig\\ISignalProvider.aidl
+ * Original file: C:\\Users\\mudassir\\git\\rig 28 aug\\rig\\src\\com\\example\\rig\\ISignalProvider.aidl
  */
 package com.example.rig;
 public interface ISignalProvider extends android.os.IInterface
@@ -49,6 +49,24 @@ this.start();
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_setCommit:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _arg0;
+_arg0 = (0!=data.readInt());
+this.setCommit(_arg0);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_setTest:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _arg0;
+_arg0 = (0!=data.readInt());
+this.setTest(_arg0);
+reply.writeNoException();
+return true;
+}
 }
 return super.onTransact(code, data, reply, flags);
 }
@@ -81,8 +99,42 @@ _reply.recycle();
 _data.recycle();
 }
 }
+@Override public void setCommit(boolean a) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(((a)?(1):(0)));
+mRemote.transact(Stub.TRANSACTION_setCommit, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+@Override public void setTest(boolean a) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(((a)?(1):(0)));
+mRemote.transact(Stub.TRANSACTION_setTest, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 }
 static final int TRANSACTION_start = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+static final int TRANSACTION_setCommit = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+static final int TRANSACTION_setTest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
 }
 public void start() throws android.os.RemoteException;
+public void setCommit(boolean a) throws android.os.RemoteException;
+public void setTest(boolean a) throws android.os.RemoteException;
 }

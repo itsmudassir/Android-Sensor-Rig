@@ -1,8 +1,10 @@
 package com.example.rig;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +28,45 @@ public class GestureClassifier {
  		
 		this.context = context;
 	}
+	
+	double Classifysignal(Gesture signal){
+		
+		double dist = DTWAlgorithm.calcDistance(trainingSet.get(0), signal);
+		
+		
+		return dist;
+		
+		
+	}
+	
+	
+	
+	
+	public void loadTrainingSet(String trainingSetName) {
+		
+			activeTrainingSet = trainingSetName;
+			FileInputStream input;
+			ObjectInputStream o;
+			try {
+				input = new FileInputStream(new File("/sdcard/MudaFit/"+activeTrainingSet + ".gst").toString());
+				
+ 
+				o = new ObjectInputStream(input);
+				trainingSet = (ArrayList<Gesture>) o.readObject();
+				Toast.makeText( context, "File READ!", Toast.LENGTH_SHORT).show();
+
+				try {
+					o.close();
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (Exception e) {
+				trainingSet = new ArrayList<Gesture>();
+			}
+		
+	}
+
 	
 	
 	public boolean commitData(Gesture g) {
@@ -57,8 +98,13 @@ public class GestureClassifier {
 				return false;
 			}
 		
-		
+	
 	}
 
+	
+	
+	
+	
+	
 	
 }

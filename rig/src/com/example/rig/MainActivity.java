@@ -1,4 +1,4 @@
-package com.example.rig;
+package com.example.rig; 
 
 
 
@@ -22,10 +22,48 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
    
   ISignalProvider SignalProvider;
+	double minDistance = Double.MAX_VALUE;
+Button btnTrain,btnTest;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		btnTrain=(Button)this.findViewById(R.id.btnTrain);
+		btnTest=(Button)this.findViewById(R.id.btnTest);
+		btnTrain.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				try {
+					SignalProvider.setCommit(true);
+					Toast.makeText(getApplicationContext(), "trainButtone work", Toast.LENGTH_SHORT).show();
+
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+btnTest.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				try {
+					SignalProvider.setTest(true);
+			
+					Toast.makeText(getApplicationContext(), "testButtone work", Toast.LENGTH_SHORT).show();
+
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
 	}
   
 	private final ServiceConnection SignalConnection= new ServiceConnection(){

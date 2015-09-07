@@ -25,22 +25,22 @@
         android:text="Connect" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnTrain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/button1"
         android:layout_below="@+id/button1"
         android:layout_marginTop="20dp"
           android:onClick="startService"
-        android:text="start" />
+        android:text="train" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/button2"
         android:layout_centerVertical="true"
              android:onClick="stopService"
-        android:text="stop" />
+        android:text="test" />
 
 </RelativeLayout>
