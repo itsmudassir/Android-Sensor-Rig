@@ -8,4 +8,5 @@ import java.util.List;
  */
 public interface GestureRecorderListener {
     public void onGestureRecorded(ArrayList<float[]> value);
+    public void onGestureRecordedTest(ArrayList<float[]> value);
 }

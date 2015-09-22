@@ -28,19 +28,36 @@
         android:id="@+id/btnTrain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/button1"
+        android:layout_alignLeft="@+id/btnTest"
         android:layout_below="@+id/button1"
-        android:layout_marginTop="20dp"
-          android:onClick="startService"
+        android:layout_marginTop="28dp"
+        android:onClick="startService"
         android:text="train" />
 
-    <Button
-        android:id="@+id/btnTest"
+    <TextView
+        android:id="@+id/trainingSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button2"
+        android:layout_alignBaseline="@+id/btnTrain"
+        android:layout_alignBottom="@+id/btnTrain"
+        android:layout_alignLeft="@+id/button1"
+        android:text="walk" />
+
+    <TextView
+        android:id="@+id/gestureName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/trainingSet"
+        android:layout_below="@+id/btnTrain"
+        android:text="Gesture Name" />
+
+    <Button
+        android:id="@+id/btnStopTrain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
         android:layout_centerVertical="true"
-             android:onClick="stopService"
-        android:text="test" />
+        android:onClick="stopService"
+        android:text="StopTrain" />
 
 </RelativeLayout>

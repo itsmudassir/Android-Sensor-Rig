@@ -37,7 +37,7 @@ public class GestureRecorder implements SensorEventListener {
 	
 	float value;
 	public enum RecordMode {
-		MOTION_DETECTION, PUSH_TO_GESTURE
+		MOTION_DETECTION, PUSH_TO_GESTURE , IDLE
 	};
 
 	final int MIN_GESTURE_SIZE = 50;
@@ -90,32 +90,59 @@ public class GestureRecorder implements SensorEventListener {
 
 	public void onPushToGesture() {
 
-		
-		
-			
-				if (gestureValues.size() > MIN_GESTURE_SIZE) {
+			if (gestureValues.size() > MIN_GESTURE_SIZE) {
 					listener.onGestureRecorded(gestureValues);
-					stop();
+					  //its mine
+					Log.d("storing ", "new move");
+					//recordMode = RecordMode.MOTION_DETECTION;
+
+					
+					
 				}
-				 
-			
-		
 	}
+				public void onPushToTrain() {
+
+					if (gestureValues.size() > MIN_GESTURE_SIZE) {
+
+						listener.onGestureRecordedTest(gestureValues);
+						gestureValues.clear();
+						Log.d("PushtoTrain", "w");
+
+
+						
+					}
+				
+				 
+				}
+			
 
 	@Override
 	public void onSensorChanged(SensorEvent sensorEvent) {
 
 		float[] value = { sensorEvent.values[SensorManager.DATA_X], sensorEvent.values[SensorManager.DATA_Y], sensorEvent.values[SensorManager.DATA_Z] };
-		Log.d("ONSEMSOR", "CHANGED"); 
-        gestureValues.add(value);
+	//	Log.d("ONSEMSOR", "CHANGED"); 
+        
+		switch(recordMode){
+		
+		case MOTION_DETECTION:
+			//gestureValues = new ArrayList<float[]>();
+			gestureValues.add(value);
+
+			onPushToTrain();
+		//	Log.d("SensChang", "MotionDetect;
+			break;
+		
+		case PUSH_TO_GESTURE:
+		gestureValues.add(value);
 		
         onPushToGesture();
+        break;
 		
 	}
-
+	}
 	public void registerListener(GestureRecorderListener listener) {
 		this.listener = listener;
-		//start();
+		start();
 	}
 
 	public void setRecordMode(RecordMode recordMode) {
@@ -130,7 +157,10 @@ public class GestureRecorder implements SensorEventListener {
 
 	public void stop() {
 		sensorManager.unregisterListener(this);
+		Log.d("stop() ", "unreg ");
+
 		isRunning = false;
+ 
 	}
 
 	public void unregisterListener(GestureRecorderListener listener) {

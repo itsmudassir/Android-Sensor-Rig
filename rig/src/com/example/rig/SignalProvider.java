@@ -26,19 +26,16 @@ import android.widget.Toast;
 public class SignalProvider extends Service implements  GestureRecorderListener  {
 	GestureRecorder recorder;
  GestureClassifier classifier;
+ String activeTrainingSet="walk";
+	String activeLearnLabel;
  ArrayList<float[]> value;
  
-boolean commit=true, test=false;
- 
- 
-	
-	
-	
+boolean isLearning,isTesting;
  
 	public float accel;
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
         recorder.registerListener(this);
         
 
@@ -72,29 +69,55 @@ boolean commit=true, test=false;
 			
 					
  				       Log.d("recorder.start", "hit");
- recorder.start();
+ //recorder.start();
 				}
 
 		@Override
 		public void setCommit(boolean a) throws RemoteException {
 			// TODO Auto-generated method stub
-			
-			
-			
-				commit=a;
-	
-		
-			
-			
 		}
 
 		@Override
 		public void setTest(boolean a) throws RemoteException {
 			// TODO Auto-generated method stub
-			test=a;
-			double results=classifier.Classifysignal(new Gesture(value,"TEST"));
+			//test=a;
+			double results=classifier.Classifysignal(new Gesture(value,"TEST"),activeTrainingSet);
 			Toast.makeText( getApplicationContext(), "DTW DIST="+Double.toString(results), Toast.LENGTH_SHORT).show();
 			
+		}
+
+		@Override
+		public void startLearning(String ActiveTraininSet,String gestureName) throws RemoteException {
+			// TODO Auto-generated method stub
+			isLearning = true;
+			activeTrainingSet=ActiveTraininSet;
+			activeLearnLabel= gestureName;
+			recorder.setRecordMode(GestureRecorder.RecordMode.PUSH_TO_GESTURE);
+		}
+
+		@Override
+		public void startTesting(String ActiveTrainingSet) throws RemoteException {
+			// TODO Auto-generated method stub
+			activeTrainingSet=ActiveTrainingSet;
+			isTesting= true;
+	recorder.start();
+	recorder.setRecordMode(GestureRecorder.RecordMode.MOTION_DETECTION);
+
+		}
+
+		@Override
+		public void stopLearning() throws RemoteException {
+			// TODO Auto-generated method stub
+			isLearning = false;
+			recorder.setRecordMode(GestureRecorder.RecordMode.MOTION_DETECTION);
+
+		}
+
+		@Override
+		public void stopTesting() throws RemoteException {
+			// TODO Auto-generated method stub
+		isTesting=false;
+		recorder.stop();
 		}
 
 		
@@ -121,10 +144,12 @@ boolean commit=true, test=false;
 	   
  	   
 		@Override
-		public void onGestureRecorded(ArrayList<float[]> value1) {
-			value=value1;
-			Log.d("ongesture", "array iss here");
-if(commit){
+		public void onGestureRecorded(ArrayList<float[]> value) {
+			//value=value1;
+			if(isLearning){
+		
+			Log.d("onGesture", "array iss here");
+
 
 			classifier.commitData(new Gesture(value,"walk"));
 			float a=value.get(3)[2];
@@ -132,14 +157,44 @@ if(commit){
 			Toast.makeText(getApplicationContext(), "intent"+Float.toString(a), Toast.LENGTH_SHORT).show();
 for(int i=0;i<48;i++){
 				   Log.d("OnGesture", " Val: "+value.get(i)[0]+" "+value.get(i)[1]+" "+value.get(i)[2]);
- 			}
+ 			
 }
-//if(test){
-			//classifier.loadTrainingSet("walk");
+recorder.setRecordMode(GestureRecorder.RecordMode.MOTION_DETECTION);
+Toast.makeText( getApplicationContext(), "New Gestr Got", Toast.LENGTH_SHORT).show();
+
+			}
 			
 		
 
 }
+		double results=007;
+		@Override
+		public void onGestureRecordedTest(ArrayList<float[]> value1) {
+			value=value1;
+			// TODO Auto-generated method stub
+			//recorder.stop();
+
+			Log.d("RecordedTest", "in");
+
+if(isTesting){
+	recorder.setRecordMode(GestureRecorder.RecordMode.IDLE);
+	Log.d("MODE", "IDLE");
+
+
+				//recorder.stop();
+				classifier.loadTrainingSet(activeTrainingSet);
+//results++;
+				
+				results=classifier.Classifysignal(new Gesture(value,"TEST"),activeTrainingSet);
+				Toast.makeText( getApplicationContext(), "DTW DIST="+Double.toString(results), Toast.LENGTH_SHORT).show();
+					//recorder.start();
+				recorder.setRecordMode(GestureRecorder.RecordMode.MOTION_DETECTION);
+				Log.d("MODE", "Motion_DETECTION");
+
+				
+			}		//classifier.loadTrainingSet("walk");
+			
+		}
 		
 		
 	

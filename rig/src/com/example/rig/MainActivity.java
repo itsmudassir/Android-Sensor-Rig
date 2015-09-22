@@ -20,23 +20,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+   String activeTrainingSet,gestureName;
    
   ISignalProvider SignalProvider;
 	double minDistance = Double.MAX_VALUE;
-Button btnTrain,btnTest;
+Button btnTrain,btnStopTrain;
+TextView txtTrainSetName,txtGestureName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		btnTrain=(Button)this.findViewById(R.id.btnTrain);
-		btnTest=(Button)this.findViewById(R.id.btnTest);
+		btnStopTrain=(Button)this.findViewById(R.id.btnStopTrain);
+		txtTrainSetName=(TextView)this.findViewById(R.id.trainingSet);
+		txtGestureName=(TextView)this.findViewById(R.id.gestureName);
+		
+		activeTrainingSet = txtTrainSetName.getText().toString();
+		gestureName= txtGestureName.getText().toString();
+
+		
+		
 		btnTrain.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				try {
-					SignalProvider.setCommit(true);
+					SignalProvider.startLearning(activeTrainingSet,gestureName);
 					Toast.makeText(getApplicationContext(), "trainButtone work", Toast.LENGTH_SHORT).show();
 
 				} catch (RemoteException e) {
@@ -47,20 +56,21 @@ Button btnTrain,btnTest;
 		});
 		
 		
-btnTest.setOnClickListener(new OnClickListener() {
+btnStopTrain.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				try {
-					SignalProvider.setTest(true);
-			
-					Toast.makeText(getApplicationContext(), "testButtone work", Toast.LENGTH_SHORT).show();
+					SignalProvider.stopLearning();
+					Toast.makeText(getApplicationContext(), "stopTrain work", Toast.LENGTH_SHORT).show();
 
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				
 			}
 		});
 		
@@ -72,12 +82,14 @@ btnTest.setOnClickListener(new OnClickListener() {
 		public void onServiceConnected(ComponentName arg0, IBinder service) {
 			// TODO Auto-generated method stub
 			SignalProvider= ISignalProvider.Stub.asInterface(service);
-			
+			  
 				Toast.makeText(getApplicationContext(), "OnServiceConn", Toast.LENGTH_SHORT).show();
 
 				try {
-					Log.d("MainAct", "onSerConn");
-					SignalProvider.start();
+					Log.d("MainAct", "onSerConn-StartTesting");
+					SignalProvider.startTesting(activeTrainingSet);
+					Log.d("MainAct", "onSerConn-StartTesting");
+
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

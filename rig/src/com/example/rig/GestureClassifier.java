@@ -29,17 +29,26 @@ public class GestureClassifier {
 		this.context = context;
 	}
 	
-	double Classifysignal(Gesture signal){
-		
+	double Classifysignal(Gesture signal,String TrainingSetName){
+		Log.d("Classifysignal", "in");
+		loadTrainingSet(TrainingSetName);
+
 		double dist = DTWAlgorithm.calcDistance(trainingSet.get(0), signal);
-		
+		Log.d("Classifysignal", "deep");
+
 		
 		return dist;
 		
 		
 	}
 	
-	
+	public void trainData(String trainingSetName,Gesture signal){
+		
+		loadTrainingSet(trainingSetName);
+		
+		
+		
+	}
 	
 	
 	public void loadTrainingSet(String trainingSetName) {
@@ -48,7 +57,7 @@ public class GestureClassifier {
 			FileInputStream input;
 			ObjectInputStream o;
 			try {
-				input = new FileInputStream(new File("/sdcard/MudaFit/"+activeTrainingSet + ".gst").toString());
+				input = new FileInputStream(new File("/sdcard/MudaFit/"+"walk" + ".gst").toString());
 				
  
 				o = new ObjectInputStream(input);
@@ -62,6 +71,8 @@ public class GestureClassifier {
 					e.printStackTrace();
 				}
 			} catch (Exception e) {
+				Toast.makeText( context, "file read fail!", Toast.LENGTH_SHORT).show();
+
 				trainingSet = new ArrayList<Gesture>();
 			}
 		

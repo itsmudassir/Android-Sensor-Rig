@@ -49,6 +49,15 @@ this.start();
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_setTest:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _arg0;
+_arg0 = (0!=data.readInt());
+this.setTest(_arg0);
+reply.writeNoException();
+return true;
+}
 case TRANSACTION_setCommit:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -58,12 +67,37 @@ this.setCommit(_arg0);
 reply.writeNoException();
 return true;
 }
-case TRANSACTION_setTest:
+case TRANSACTION_startLearning:
 {
 data.enforceInterface(DESCRIPTOR);
-boolean _arg0;
-_arg0 = (0!=data.readInt());
-this.setTest(_arg0);
+java.lang.String _arg0;
+_arg0 = data.readString();
+java.lang.String _arg1;
+_arg1 = data.readString();
+this.startLearning(_arg0, _arg1);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_stopLearning:
+{
+data.enforceInterface(DESCRIPTOR);
+this.stopLearning();
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_startTesting:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _arg0;
+_arg0 = data.readString();
+this.startTesting(_arg0);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_stopTesting:
+{
+data.enforceInterface(DESCRIPTOR);
+this.stopTesting();
 reply.writeNoException();
 return true;
 }
@@ -99,21 +133,6 @@ _reply.recycle();
 _data.recycle();
 }
 }
-@Override public void setCommit(boolean a) throws android.os.RemoteException
-{
-android.os.Parcel _data = android.os.Parcel.obtain();
-android.os.Parcel _reply = android.os.Parcel.obtain();
-try {
-_data.writeInterfaceToken(DESCRIPTOR);
-_data.writeInt(((a)?(1):(0)));
-mRemote.transact(Stub.TRANSACTION_setCommit, _data, _reply, 0);
-_reply.readException();
-}
-finally {
-_reply.recycle();
-_data.recycle();
-}
-}
 @Override public void setTest(boolean a) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -129,12 +148,94 @@ _reply.recycle();
 _data.recycle();
 }
 }
+@Override public void setCommit(boolean a) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(((a)?(1):(0)));
+mRemote.transact(Stub.TRANSACTION_setCommit, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+@Override public void startLearning(java.lang.String trainingSetName, java.lang.String gestureName) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(trainingSetName);
+_data.writeString(gestureName);
+mRemote.transact(Stub.TRANSACTION_startLearning, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+@Override public void stopLearning() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_stopLearning, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+@Override public void startTesting(java.lang.String activeTrainingSet) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(activeTrainingSet);
+mRemote.transact(Stub.TRANSACTION_startTesting, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+@Override public void stopTesting() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_stopTesting, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 }
 static final int TRANSACTION_start = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
-static final int TRANSACTION_setCommit = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
-static final int TRANSACTION_setTest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+static final int TRANSACTION_setTest = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+static final int TRANSACTION_setCommit = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+static final int TRANSACTION_startLearning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+static final int TRANSACTION_stopLearning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
+static final int TRANSACTION_startTesting = (android.os.IBinder.FIRST_CALL_TRANSACTION + 5);
+static final int TRANSACTION_stopTesting = (android.os.IBinder.FIRST_CALL_TRANSACTION + 6);
 }
 public void start() throws android.os.RemoteException;
-public void setCommit(boolean a) throws android.os.RemoteException;
 public void setTest(boolean a) throws android.os.RemoteException;
+public void setCommit(boolean a) throws android.os.RemoteException;
+public void startLearning(java.lang.String trainingSetName, java.lang.String gestureName) throws android.os.RemoteException;
+public void stopLearning() throws android.os.RemoteException;
+public void startTesting(java.lang.String activeTrainingSet) throws android.os.RemoteException;
+public void stopTesting() throws android.os.RemoteException;
 }
